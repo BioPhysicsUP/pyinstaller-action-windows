@@ -19,7 +19,8 @@ WORKDIR=${SRCDIR:-/src}
 
 SPEC_FILE=${4:-*.spec}
 
-python -m pip install --upgrade pip wheel setuptools
+python -m pip install --upgrade pip 
+
 
 #
 # In case the user specified a custom URL for PYPI, then use
@@ -41,14 +42,17 @@ fi
 
 cd $WORKDIR
 
-if [ -f $5 ]; then
-    pip install -r $5
-fi # [ -f $5 ]
+# if [ -f $5 ]; then
+#     pip install -r $5
+# fi # [ -f $5 ]
 
-
+python -m pip install pipenv
+python -m pipenv lock
+python -m pipenv --dev install
+python -m pip install --upgrade wheel setuptools pyinstaller
 
 # if [[ "$@" == "" ]]; then
-pyinstaller --clean -y --dist ./dist/windows --workpath /tmp $SPEC_FILE
+python -m pipenv run pyinstaller --clean -y --dist ./dist/windows --workpath /tmp $SPEC_FILE
 chown -R --reference=. ./dist/windows
 # else
     # sh -c "$@"
